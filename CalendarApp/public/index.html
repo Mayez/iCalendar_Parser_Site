@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Calendar Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CHANGE ME">
+    <meta name="keywords" content="CHANGE ME">
+    <meta name="author" content="CHANGE ME">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+    <h3>Calendar Viewer</h3>
+	<h4>Status Log Panel</h4>
+	<div style = "height: 101px; overflow-y: scroll; overflow-x: scroll;">
+    <table style = "width:120%" id = "test">
+		<thead>
+			<th>Error Code</th>
+			<th>Description</th>
+		</thead>
+		<tbody id = "tbstatus">
+		</tbody>
+	</table>
+	</div>
+
+	<center>
+    <form ref='someform'
+          id='someform'>
+        <div class="form-group">
+            <input type='submit' id = "clear" class="btn btn-secondary" value="Clear"
+            onclick="clearFunction()">
+        </div>
+    </form>
+	</center>
+	<p id = "demo"></p>
+			
+	<h4>File Log Panel</h4>
+	<div style = "height: 81px; overflow-y: scroll; overflow-x: scroll">
+    <table style = "width:120%" >
+		<thead>
+			<th>File name <br>(click to download)</th>
+			<th>Version</th>
+			<th>Product ID</th>
+			<th>Number of <br>events</th>
+			<th>Number of <br>properties</th>
+		</thead>
+		<tbody id = "tbfile">
+		</tbody>
+    </table>
+	</div>	
+
+	<center>
+		<form method = "post" enctype = "multipart/form-data">
+			<input type= "file" name = "filename" multiple = "multiple">
+            <input type = "submit" class = "btn btn=primary" value = "upload">
+		</form>
+	</center>
+
+	<div id = "path"></div>
+
+	<h4>Calendar View Panel</h4>
+	<form method = "get" >
+	File Select <select id = "options" name = "options" style = "width: 200px;">
+	</select>
+	</form>
+	
+	<form method = "get" >
+	Select Event No <select id = "options1" name = "options1" style = "width: 50px;">
+	</select>
+	</form>
+	
+	<center>
+	<button id = "displayAlarms">Get Alarms</button>
+	<button id = "displayOptProps">Get Optional Props</button>
+	</center>
+	
+	<div style = "height: 169px; overflow-y: scroll; overflow-x: scroll;">
+    <table style = "width:120%" >
+		<thead id = "tbheader">
+		</thead>
+		<tbody id = "tbcalendar">
+		</tbody>
+    </table>
+	</div>
+
+	<h4>Create Calendar</h4>
+	<form>
+		File name(include .ics extension or file with any other extension or no extension at all is not accepted):<br>
+		<input type='text' id = "fileCreate" name="fileCreate" value="File Name">
+		<br><br>
+		<input type='submit' id = "fileAdd" name= "fileAdd" value="Create Calendar">
+	</form>
+	<br>
+	<div id = "texting"></div>
+	
+	<h4>Add Event</h4>        
+	<form>
+		<form method = "get" >
+		Select a File <select id = "options2" name = "options2" style = "width: 200px;">
+		</select>
+		</form>
+		Event Summary (Optional):<br>
+		<input type='text' name="summary" value="">
+		<br><br>
+
+		Event Creation Time (Required to fill all fields below*):<br>
+		Date(Year):<input type='text' id="createYear" name="createYear" value="" size = "4" maxlength="4">
+		Date(Month):<input type='text' id="createMonth" name="createMonth" value="" size = "2" maxlength="2">
+		Date(Day):<input type='text' id="createDay" name="createDay" value="" size = "2" maxlength="2">
+		<br><br>
+		Time(Hr):<input type='text' id="createHr" name="createHr" value="" size = "2" maxlength="2">
+		Time(Min):<input type='text' id="createMin" name="createMin" value="" size = "2" maxlength="2">
+		Time(Sec):<input type='text' id="createSec" name="createSec" value="" size = "2" maxlength="2">
+		<form method = "get" >
+		UTC<select id = "utc1" name = "utc1" style = "width: 50px;">
+			<option> </option>
+			<option>Yes</option>
+			<option>No</option>
+		</select>
+		</form>
+		<br><br>
+
+		Event Start Time/Date (Required to fill all fields below*):<br>
+		Date(Year):<input type='text' id="startYear" name="startYear" value="" size = "4" maxlength="4">
+		Date(Month):<input type='text' id="startMonth" name="startMonth" value="" size = "2" maxlength="2">
+		Date(Day):<input type='text' id="startDay" name="startDay" value="" size = "2" maxlength="2">
+		<br><br>
+		Time(Hr):<input type='text' id="startHr" name="startHr" value="" size = "2" maxlength="2">
+		Time(Min):<input type='text' id="startMin" name="startMin" value="" size = "2" maxlength="2">
+		Time(Sec):<input type='text' id="startSec" name="startSec" value="" size = "2" maxlength="2">
+		<form method = "get" >
+		UTC<select id = "utc2" name = "utc2" style = "width: 50px;">
+			<option> </option>
+			<option>Yes</option>
+			<option>No</option>
+		</select>
+		</form>
+		<br><br>
+
+		Event Unique Identifier (Required*):<br>
+		<input type='text' name="uid" value="">
+		<br><br>
+		<input type='submit' id= "eventAdd" name= "eventAdd" class="btn btn-secondary" value="Add Event">
+	</form>
+	<div id= "field"></div>
+	<br><br>
+
+	<h4>A4 Section</h4><br>
+	<form id = "db-connect-form">
+		Username
+		<input type='text' id = "username" name="username" >
+		<br>Password
+		<input type='text' id = "password" name="password" >
+		<br>Database Name
+		<input type='text' id = "dbname" name="dbname">
+		<br>
+		<input type='button' id = "dblogin" name= "dblogin" value="Login">
+	</form>
+	<br>
+
+	<input type='button' id = "clearDb" name= "clearDb" value="Clear All Data">
+	
+	<input type='button' id = "storeFiles" name= "storeFiles" value="Store All Files">
+	<br><br>
+	
+	<input type='button' id = "dbStatus" name= "dbStatus" value="Display the DataBase Status">
+
+	<input type='button' id = "displayEvt" name= "displayEvt" value="Display Events Sorted by Start Date">
+	<br><br>
+	Connection Result: 
+	<h4 id= "testing1">DATABASE CONNECT STATUS HERE</h4>
+	
+	<h3>Display Events By File</h3>
+	<form method = "get" >
+	File Select <select id = "fileSel" name = "fileSel" style = "width: 200px;">
+	</select>
+	</form>
+	<br>
+	<input type='button' id = "evtByFile" name= "evtByFile" value="Display Events For a File">
+	<br><br>
+	<h3>Display Conflicting Events</h3>
+	<input type='button' id = "conflictEvt" name= "conflictEvt" value="Display Conflicting Events">
+
+<!--	<div id= "testing2">HIHI2</div>
+	<div id= "testing3">TESTING</div>
+-->
+<!--	<h4>FILE</h4>
+	<div style = "height: 81px; overflow-y: scroll; overflow-x: scroll">
+    <table style = "width:120%" >
+		<thead>
+			<th>cal_id</th>
+			<th>file_name</th>
+			<th>version</th>
+			<th>prod_id</th>
+		</thead>
+    </table>
+	</div>	
+	<br>
+-->
+
+	<h4>EVENT</h4>
+	<div style = "height: 200px; overflow-y: scroll; overflow-x: scroll">
+    <table style = "width:120%" >
+		<thead>
+			<th>event_id</th>
+			<th>summary</th>
+			<th>start_time</th>
+			<th>location</th>
+			<th>organizer</th>
+		</thead>
+		<tbody id = "sortDate">
+		</tbody>
+    </table>
+	</div>	
+	<br>
+
+
+	<h3>Alarms of a selected Event in a selected file will be displayed</h3>
+	<form method>
+	File Select <select id = "fileSel1" name = "fileSel1" style = "width: 200px;">
+	</select>
+	</form>
+	<form>
+	Select Event No <select id = "options4" name = "options4" style = "width: 50px;">
+	</select>
+	</form>
+	<br>
+	<input type='button' id = "almOfEvt" name= "almOfEvt" value="Display Alarms of a Selected Event">
+
+    <h4>ALARM</h4>
+	<div style = "height: 81px; overflow-y: scroll; overflow-x: scroll">
+    <table style = "width:120%" >
+		<thead>
+			<th>alarm_id</th>
+			<th>action</th>
+			<th>trigger</th>
+		</thead>
+    </table>
+	</div>	
+	<br>
+<!--    <form ref='someform'
+          id='someform'>
+          <div class="form-group">
+                <label for="entryBox">Last Name</label>
+                <input type="text" class="form-control" id="entryBox" value="TEsting" placeholder="Placeholder">
+            </div>
+        <div class="form-group">
+            <input type='submit' class="btn btn-secondary">
+        </div>
+    </form>
+-->    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
